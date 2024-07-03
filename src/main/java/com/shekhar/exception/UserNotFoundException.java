@@ -1,6 +1,6 @@
 package com.shekhar.exception;
 
-public class UserNotFoundException  {
+public class UserNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID=1L;
 	private String msg;
