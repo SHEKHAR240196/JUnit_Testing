@@ -20,6 +20,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,4 +73,39 @@ class CountryControllerTest2 {
 			    .content(newCountries))
 			    .andExpect(status().isCreated()).andDo(print());
 	}
+	
+	@Test
+	public void getCountryByIdTest() throws Exception {
+		
+		Country country = new Country(1,"India","maharashtra");
+		
+		Integer countryid=1;
+		
+		when(service.getCountryById(countryid)).thenReturn(country);
+		
+		mockMvc.perform(get("/getCountryById/{Id}",countryid)).andExpect(status().isFound())
+		.andExpect(MockMvcResultMatchers.jsonPath(".id").value(1))
+		.andExpect(MockMvcResultMatchers.jsonPath(".countryName").value("India"))
+		.andExpect(MockMvcResultMatchers.jsonPath(".stateName").value("maharashtra"));
+		
+	}
+	
+	@Test
+	public void getCountryByNameTest() throws Exception {
+		
+		Country country = new Country(1,"India","maharashtra");
+		
+		String countryname="India";
+		
+		when(service.getCountryByName(countryname)).thenReturn(country);
+		
+		mockMvc.perform(get("/getCountryByName").param("countryname", "India"))
+		.andExpect(status().isFound())
+		.andExpect(MockMvcResultMatchers.jsonPath(".id").value(1))
+		.andExpect(MockMvcResultMatchers.jsonPath(".countryName").value("India"))
+		.andExpect(MockMvcResultMatchers.jsonPath(".stateName").value("maharashtra")).andDo(print());
+		
+	}
+	
+
 }
